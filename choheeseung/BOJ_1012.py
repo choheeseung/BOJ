@@ -1,34 +1,34 @@
 from collections import deque
 
-t = int(input())
 
-dx = [0, 1, 0, -1]
-dy = [1, 0, -1, 0]
-
-
-def bfs(graph, start, visited):
-    queue = deque([start])
-    visited[start] = True
-    while queue:
-        v = queue.popleft()
-        for i in graph[v]:
-            if not visited[i]:
-                queue.append(i)
-                visited[i] = True
+def bfs(y, x):  # 영역 확인
+    q = deque()
+    q.append((y, x))
+    while q:
+        now = q.popleft()
+        for l in range(4):  # 사방면 확인
+            hh = now[0] + dh[l]
+            ww = now[1] + dw[l]
+            if 0 <= ww < w and 0 <= hh < h and graph[hh][ww] == 1:
+                graph[hh][ww] = 0
+                q.append((hh, ww))
 
 
-for _ in range(t):
-    m, n, k = map(int, input().split())
-    graph = [[0] * (m + 1) for _ in range(n + 1)]
+dw = [0, 1, 0, -1]  # 북, 동, 남, 서
+dh = [-1, 0, 1, 0]
+
+T = int(input())
+for _ in range(T):
+    w, h, k = map(int, input().split())
+    graph = [[0] * w for _ in range(h)]
     result = 0
-
-    for i in range(k):
+    for _ in range(k):  # 배추 위치 입력
         x, y = map(int, input().split())
-        graph[x][y] = 1
-    for i in range(n):
-        for j in range(m):
+        graph[y][x] = 1
+    for i in range(h):
+        for j in range(w):
             if graph[i][j] == 1:
                 graph[i][j] = 0
-                bfs(graph, i, j)
-                result += 1
+                bfs(i, j)
+                result += 1  # 영역 수
     print(result)
